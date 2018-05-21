@@ -174,6 +174,11 @@ def main():
         payload_list = WAF_REQUEST_DETECTION_PAYLOADS
         info("using default payloads")
 
+    if opt.tamperDir is not None:
+        info("using provided tampers: {}".format(opt.tamperDir))
+    else:
+        info("using default tampers")
+
     if opt.saveFingerprints:
         warn(
             "fingerprinting is enabled, all fingerprints (WAF related or not) will be saved for further analysis",
