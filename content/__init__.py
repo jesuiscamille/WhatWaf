@@ -119,6 +119,7 @@ def get_working_tampers(url, norm_response, payloads, **kwargs):
     agent = kwargs.get("agent", None)
     verbose = kwargs.get("verbose", False)
     max_successful_payloads = kwargs.get("tamper_int", 5)
+    tamper_dir = kwargs.get("tamper_dir", lib.settings.TAMPERS_DIRECTORY)
 
     failed_schema = (
         re.compile("404", re.I), re.compile("captcha", re.I),
@@ -129,7 +130,7 @@ def get_working_tampers(url, norm_response, payloads, **kwargs):
     )
     lib.formatter.info("loading payload tampering scripts")
     tampers = ScriptQueue(
-        lib.settings.TAMPERS_DIRECTORY, lib.settings.TAMPERS_IMPORT_TEMPLATE, verbose=verbose
+        tamper_dir, lib.settings.TAMPERS_IMPORT_TEMPLATE, verbose=verbose
     ).load_scripts()
 
     if max_successful_payloads > len(tampers):
@@ -246,6 +247,7 @@ def detection_main(url, payloads, **kwargs):
     use_yaml = kwargs.get("use_yaml", False)
     use_json = kwargs.get("use_json", False)
     use_csv = kwargs.get("use_csv", False)
+    tamper_dir = kwargs.get("tamper_dir", lib.settings.TAMPERS_DIRECTORY)
 
     filepath = lib.settings.YAML_FILE_PATH if use_yaml else lib.settings.JSON_FILE_PATH if use_json else lib.settings.CSV_FILE_PATH
     filename = lib.settings.random_string(length=10, use_yaml=use_yaml, use_json=use_json, use_csv=use_csv)
@@ -303,7 +305,7 @@ def detection_main(url, payloads, **kwargs):
         if not skip_bypass_check:
             found_working_tampers = get_working_tampers(
                 url, normal_response, payloads, proxy=proxy, agent=agent, verbose=verbose,
-                tamper_int=tamper_int
+                tamper_int=tamper_int, tamper_dir=tamper_dir
             )
             if not formatted:
                 lib.settings.produce_results(found_working_tampers)
@@ -369,7 +371,7 @@ def detection_main(url, payloads, **kwargs):
             lib.formatter.info("searching for bypasses")
             found_working_tampers = get_working_tampers(
                 url, normal_response, payloads, proxy=proxy, agent=agent, verbose=verbose,
-                tamper_int=tamper_int
+                tamper_int=tamper_int, tamper_dir=tamper_dir
             )
             if not formatted:
                 lib.settings.produce_results(found_working_tampers)

@@ -190,7 +190,7 @@ def main():
                 verification_number=opt.verifyNumber, formatted=opt.formatOutput,
                 tamper_int=opt.amountOfTampersToDisplay, use_json=opt.sendToJSON,
                 use_yaml=opt.sendToYAML, use_csv=opt.sendToCSV,
-                fingerprint_waf=opt.saveFingerprints
+                fingerprint_waf=opt.saveFingerprints, tamper_dir=opt.tamperDir
             )
 
         elif opt.runMultipleWebsites:
@@ -205,7 +205,7 @@ def main():
                         verification_number=opt.verifyNumber, formatted=opt.formatOutput,
                         tamper_int=opt.amountOfTampersToDisplay, use_json=opt.sendToJSON,
                         use_yaml=opt.sendToYAML, use_csv=opt.sendToCSV,
-                        fingerprint_waf=opt.saveFingerprints
+                        fingerprint_waf=opt.saveFingerprints, tamper_dir=opt.tamperDir
                     )
                     print("\n\b")
                     time.sleep(0.5)
