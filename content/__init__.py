@@ -28,10 +28,20 @@ class ScriptQueue(object):
         file_list = [f for f in os.listdir(self.files) if not any(s in f for s in self.skip_schema)]
         for script in sorted(file_list):
             script = script[:-3]
-            if self.verbose:
-                lib.formatter.debug("loading {} script '{}'".format(self.script_type, script))
-            script = importlib.import_module(self.path.format(script))
-            retval.append(script)
+            try:
+                if self.verbose:
+                    lib.formatter.debug("loading {} script '{}'".format(self.script_type, script))
+                script = importlib.import_module(self.path.format(script))
+                retval.append(script)
+            except Exception as e:
+                lib.formatter.fatal(
+                    "There was an error with a detection or a tamper script."
+                    + " If you used --tamper-dir, make sure that your tampers "
+                    + " are compatibles with WhatWaf."
+                    + "\nError:\n\n {}".format(e)
+                )
+                exit(1)
+
         return retval
 
 
