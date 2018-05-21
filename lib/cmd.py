@@ -80,7 +80,7 @@ class WhatWafParser(ArgumentParser):
         misc.add_argument("--verify-num", dest="verifyNumber", metavar="INT", type=int,
                           help="Change the default amount (5) to verify if there really is not a WAF present")
         misc.add_argument("--tamper-dir", dest="tamperDir", metavar="FULL-PATH-TO-DIRECTORY",
-                          help="Use only the tampers in the specified directory")
+                          help="Use only the tampers that are in the specified directory")
 
         hidden = parser.add_argument_group()
         hidden.add_argument("--clean", action="store_true", dest="cleanHomeFolder", help=SUPPRESS)
