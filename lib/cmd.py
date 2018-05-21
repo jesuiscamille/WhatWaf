@@ -79,6 +79,8 @@ class WhatWafParser(ArgumentParser):
                           help="Skip checking for bypasses and just identify the firewall")
         misc.add_argument("--verify-num", dest="verifyNumber", metavar="INT", type=int,
                           help="Change the default amount (5) to verify if there really is not a WAF present")
+        misc.add_argument("--tamper-dir", dest="tamperDir", metavar="PATH-TO-DIRECTORY",
+                          help="Use the tampers presents in the specified directory")
 
         hidden = parser.add_argument_group()
         hidden.add_argument("--clean", action="store_true", dest="cleanHomeFolder", help=SUPPRESS)
