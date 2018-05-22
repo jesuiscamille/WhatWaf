@@ -40,13 +40,13 @@ class ScriptQueue(object):
                 script = imp.load_source(module_name, self.files + script)
                 retval.append(script)
             except Exception as e:
-                lib.formatter.warn(
+                lib.formatter.error(
                     "The {} module couldn't be loaded. To debug," \
                     " run in verbose mode".format(module_name)
                 )
 
                 if self.verbose:
-                    lib.formatter.debug(
+                    lib.formatter.warn(
                         "Error for {}: {}".format(module_name, e)
                     )
 
