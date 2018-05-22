@@ -37,7 +37,10 @@ class ScriptQueue(object):
                 if self.verbose:
                     lib.formatter.debug("loading {} script '{}'".format(self.script_type, script))
                 # https://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path#67692
-                script = imp.load_source(module_name, self.files + script)
+                script = imp.load_source(
+                    lib.settings.TAMPERS_IMPORT_TEMPLATE.replace(".{}", ""),
+                    self.files + script
+                )
                 retval.append(script)
             except Exception as e:
                 lib.formatter.error(
