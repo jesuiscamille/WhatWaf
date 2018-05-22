@@ -7,6 +7,7 @@ import random
 import lib.settings
 import lib.formatter
 import lib.firewall_found
+import imp
 
 
 class ScriptQueue(object):
@@ -17,6 +18,10 @@ class ScriptQueue(object):
     """
 
     def __init__(self, files_path, import_path, verbose=False):
+        # alway have a '/' at the end of files_path
+        if not files_path[-1] == "/":
+            files_path += "/"
+
         self.files = files_path
         self.path = import_path
         self.verbose = verbose
@@ -27,11 +32,13 @@ class ScriptQueue(object):
         retval = []
         file_list = [f for f in os.listdir(self.files) if not any(s in f for s in self.skip_schema)]
         for script in sorted(file_list):
-            script = script[:-3]
+            module_name = script[:-3]
             try:
                 if self.verbose:
                     lib.formatter.debug("loading {} script '{}'".format(self.script_type, script))
-                script = importlib.import_module(self.path.format(script))
+                # https://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path#67692
+                # script = imp.load_source(module_name, self.files + script)
+                script = imp.load_source('', self.files + script)
                 retval.append(script)
             except Exception as e:
                 lib.formatter.fatal(
