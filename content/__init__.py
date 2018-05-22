@@ -37,17 +37,18 @@ class ScriptQueue(object):
                 if self.verbose:
                     lib.formatter.debug("loading {} script '{}'".format(self.script_type, script))
                 # https://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path#67692
-                # script = imp.load_source(module_name, self.files + script)
-                script = imp.load_source('', self.files + script)
+                script = imp.load_source(module_name, self.files + script)
                 retval.append(script)
             except Exception as e:
-                lib.formatter.fatal(
-                    "There was an error with a detection or a tamper script."
-                    + " If you used --tamper-dir, make sure that your tampers "
-                    + " are compatibles with WhatWaf."
-                    + "\nError:\n\n {}".format(e)
+                lib.formatter.warn(
+                    "The {} module couldn't be loaded. To debug," \
+                    " run in verbose mode".format(module_name)
                 )
-                exit(1)
+
+                if self.verbose:
+                    lib.formatter.debug(
+                        "Error for {}: {}".format(module_name, e)
+                    )
 
         return retval
 
@@ -178,7 +179,21 @@ def get_working_tampers(url, norm_response, payloads, **kwargs):
                         lib.formatter.debug("unknown response detected")
                 if status != 404:
                     if status == 200:
-                        working_tampers.add((tamper.__type__, tamper.tamper(tamper.__example_payload__), load))
+                        # tmp_tamper = (tamper.__type__, tamper.tamper(tamper.__example_payload__), load)
+                        tmp_tamper = ["N/A", "N/A", load]
+                        try:
+                            tmp_tamper[0] = tamper.__type__
+                            tmp_tamper[1] = tamper.tamper(tamper.__example_payload__)
+                        except Exception:
+                            lib.formatter.debug(
+                                "The tamper script {} doesn't provide a "
+                                "__type__ and __example_payload__"
+                                .format(load)
+                            )
+
+                        working_tampers.add(
+                            (tmp_tamper[0], tmp_tamper[1], tmp_tamper[2])
+                        )
             else:
                 if verbose:
                     lib.formatter.warn("failure found in response content")
