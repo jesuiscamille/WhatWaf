@@ -192,7 +192,7 @@ def get_working_tampers(url, norm_response, payloads, **kwargs):
                             )
 
                         working_tampers.add(
-                            (tmp_tamper[0], tmp_tamper[1], tmp_tamper[2])
+                            tuple(tmp_tamper)
                         )
             else:
                 if verbose:
